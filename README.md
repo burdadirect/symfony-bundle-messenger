@@ -3,8 +3,8 @@
 ## Team
 
 ### Developers
-Malene Klit - malene.klit@burda.com
-Christian Puchinger - christian.puchinger@burda.com
+- Malene Klit - malene.klit@burda.com
+- Christian Puchinger - christian.puchinger@burda.com
 
 ## Installation
 
