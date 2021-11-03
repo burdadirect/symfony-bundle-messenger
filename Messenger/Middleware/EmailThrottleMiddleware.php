@@ -22,7 +22,7 @@ class EmailThrottleMiddleware implements MiddlewareInterface {
    * @param ParameterBagInterface $parameterBag
    */
   public function __construct(ParameterBagInterface $parameterBag) {
-    $mailsPerSecond = $parameterBag->get('hbm.messenger.mailsPerSecond') ?: NULL;
+    $mailsPerSecond = $parameterBag->get('hbm.messenger')['mailsPerSecond'] ?: NULL;
     if ($mailsPerSecond) {
       //  A micro second is one millionth of a second.
       $this->sleep = 1/$mailsPerSecond * 1000000;

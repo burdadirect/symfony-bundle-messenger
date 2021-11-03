@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        public: false
+        autowire: true
+
+    ############################################################################
+    # MIDDLEWARE                                                               #
+    ############################################################################
+
+    HBM\MessengerBundle\Messenger\Middleware\:
+        resource: '../../Messenger/Middleware'
+
+
+    ############################################################################
+    # HANDLER                                                                  #
+    ############################################################################
+
+    HBM\MessengerBundle\Messenger\Handler\:
+        resource: '../../Messenger/Handler'
