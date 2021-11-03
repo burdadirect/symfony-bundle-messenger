@@ -22,6 +22,7 @@ class HBMMessengerExtension extends Extension {
     $config = $this->processConfiguration($configuration, $configs);
 
     $container->setParameter('hbm.messenger', $config);
+    $container->setParameter('hbm.messenger.mailer', $config['mailer']);
 
     $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
     $loader->load('services.yml');

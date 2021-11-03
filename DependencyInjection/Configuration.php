@@ -21,7 +21,31 @@ class Configuration implements ConfigurationInterface {
 
     $rootNode
       ->children()
-        ->scalarNode('mailsPerSecond')->end()
+        ->arrayNode('mailer')
+          ->children()
+            ->scalarNode('mails_per_second')->defaultNull()->end()
+            ->arrayNode('from')
+              ->children()
+                ->scalarNode('mail')->end()
+                ->scalarNode('name')->defaultValue('')->end()
+              ->end()
+            ->end()
+            ->arrayNode('subject')
+              ->children()
+                ->scalarNode('prefix')->defaultNull()->end()
+                ->scalarNode('postfix')->defaultNull()->end()
+              ->end()
+            ->end()
+            ->arrayNode('headers')
+              ->prototype('array')
+                ->children()
+                  ->scalarNode('key')->end()
+                  ->scalarNode('value')->end()
+                ->end()
+              ->end()
+            ->end()
+          ->end()
+        ->end()
       ->end();
 
     return $treeBuilder;
