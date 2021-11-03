@@ -11,3 +11,7 @@
 .buildpath
 .project
 /.settings/*
+
+
+# MacOS
+.DS_Store
