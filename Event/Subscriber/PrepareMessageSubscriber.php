@@ -54,7 +54,7 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
     $headerReplacements = $this->getHeaderReplacements($message);
 
     // Set From address.
-    $message->from(new Address($config['from']['mail'], $config['from']['mail']));
+    $message->from(new Address($config['from']['mail'], $config['from']['name']));
 
     // Add headers.
     $headers = $config['headers'] ?: [];
