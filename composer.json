@@ -1,0 +1,36 @@
+{
+  "name": "burdadirect/symfony-bundle-messenger",
+  "description": "HBM Messenger Bundle - Basic Messages and Middleware for the symfony/messenger.",
+  "authors" : [{
+    "name" : "Malene Klit",
+    "email" : "malene.klit@burda.com"
+  },{
+    "name" : "Christian Puchinger",
+    "email" : "christian.puchinger@burda.com"
+  }],
+  "license": "MIT",
+  "type": "symfony-bundle",
+  "autoload": {
+    "psr-4": {
+      "HBM\\MessengerBundle\\": ""
+    }
+  },
+  "require": {
+    "php": "^7.4.0",
+    "symfony/config": "^5.3",
+    "symfony/console": "^5.3",
+    "symfony/dependency-injection": "^5.3",
+    "symfony/framework-bundle": "^5.3",
+    "symfony/http-kernel": "^5.3",
+    "symfony/mailer": "^5.3",
+    "symfony/messenger": "^5.3",
+    "symfony/twig-bridge": "^5.3"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
