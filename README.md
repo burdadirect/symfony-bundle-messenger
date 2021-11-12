@@ -30,7 +30,20 @@ With Symfony 4 the bundle is enabled automatically for all environments (see `co
 
 ```yml
 hbm_messenger:
-    mailsPerSecond: 1
+    mailer:
+        mails_per_second: 5
+        from:
+            mail: ''
+            name: ''
+
+        headers:
+            - { key: 'X-SES-CONFIGURATION-SET', value: '' }
+            - { key: 'X-SES-MESSAGE-TAGS', value: '' }
+            - { key: 'Return-Path', value: '' }
+
+        subject:
+            prefix: ''
+            postfix: ''
 
 ```
 
