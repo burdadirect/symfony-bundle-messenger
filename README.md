@@ -43,6 +43,7 @@ hbm_messenger:
 
         subject:
             prefix: ''
+            postfix: ''
 
 ```
 
