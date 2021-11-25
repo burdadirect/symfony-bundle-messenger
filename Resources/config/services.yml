@@ -17,3 +17,5 @@ services:
 
     HBM\MessengerBundle\Messenger\Handler\:
         resource: '../../Messenger/Handler'
+        tags:
+            - { name: messenger.message_handler }
