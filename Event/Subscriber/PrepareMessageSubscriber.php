@@ -10,7 +10,7 @@ use Symfony\Component\Mime\Email;
 
 class PrepareMessageSubscriber implements EventSubscriberInterface {
 
-  private ParameterBagInterface $pb;
+  private array $config;
 
   /**
    * PrepareMessageSubscriber constructor.
@@ -18,13 +18,13 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
    * @param ParameterBagInterface $parameterBag
    */
   public function __construct(ParameterBagInterface $parameterBag) {
-    $this->pb = $parameterBag;
+    $this->config = $parameterBag->get('hbm.messenger.mailer');
   }
 
   /**
    * @return string[]
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       MessageEvent::class => 'onMessage',
     ];
@@ -35,8 +35,17 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
    *
    * @return array
    */
-  protected function getHeaderReplacements(Email $email) : array {
+  protected function getHeaderReplacements(Email $email): array {
     return [];
+  }
+
+  /**
+   * @param Email $email
+   *
+   * @return Address|null
+   */
+  protected function getFrom(Email $email): ?Address {
+    return new Address($this->config['from']['mail'], $this->config['from']['name']);
   }
 
   /**
@@ -48,16 +57,16 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $config = $this->pb->get('hbm.messenger.mailer');
+    // Set From address.
+    if ($from = $this->getFrom($message)) {
+      $message->from($from);
+    }
 
     // Gather header replacements.
     $headerReplacements = $this->getHeaderReplacements($message);
 
-    // Set From address.
-    $message->from(new Address($config['from']['mail'], $config['from']['name']));
-
     // Add headers.
-    $headers = $config['headers'] ?: [];
+    $headers = $this->config['headers'] ?: [];
     foreach ($headers as $header) {
       $headerValue = str_replace(array_keys($headerReplacements), array_values($headerReplacements), $header['value']);
 
@@ -90,8 +99,8 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
     }
 
     // Add environment-specific subject prefixes/postfixes.
-    $subjectPrefix = $config['subject']['prefix'] ?? '';
-    $subjectPostfix = $config['subject']['postfix'] ?? '';
+    $subjectPrefix = $this->config['subject']['prefix'] ?? '';
+    $subjectPostfix = $this->config['subject']['postfix'] ?? '';
 
     $message->subject($subjectPrefix.$message->getSubject().$subjectPostfix);
   }
