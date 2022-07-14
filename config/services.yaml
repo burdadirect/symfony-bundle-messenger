@@ -1,14 +1,15 @@
 services:
     _defaults:
         public: false
-        autowire: true
+        autowire: false
+        autoconfigure: false
 
     ############################################################################
     # MIDDLEWARE                                                               #
     ############################################################################
 
     HBM\MessengerBundle\Messenger\Middleware\:
-        resource: '../Messenger/Middleware'
+        resource: '../src/Messenger/Middleware'
 
 
     ############################################################################
@@ -16,6 +17,6 @@ services:
     ############################################################################
 
     HBM\MessengerBundle\Messenger\Handler\:
-        resource: '../Messenger/Handler'
+        resource: '../src/Messenger/Handler'
         tags:
             - { name: messenger.message_handler }
