@@ -42,4 +42,5 @@ class EmailThrottleMiddleware implements MiddlewareInterface {
 
     return $stack->next()->handle($envelope, $stack);
   }
+
 }

@@ -8,9 +8,9 @@ services:
     # MIDDLEWARE                                                               #
     ############################################################################
 
-    HBM\MessengerBundle\Messenger\Middleware\:
-        resource: '../src/Messenger/Middleware'
-
+    HBM\MessengerBundle\Messenger\Middleware\EmailThrottleMiddleware:
+        arguments:
+            $parameterBag: '@parameter_bag'
 
     ############################################################################
     # HANDLER                                                                  #
