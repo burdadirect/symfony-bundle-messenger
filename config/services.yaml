@@ -16,7 +16,8 @@ services:
     # HANDLER                                                                  #
     ############################################################################
 
-    HBM\MessengerBundle\Messenger\Handler\:
-        resource: '../src/Messenger/Handler'
+    HBM\MessengerBundle\Messenger\Handler\CommandHandler:
+        arguments:
+            $kernel: '@kernel'
         tags:
             - { name: messenger.message_handler }
