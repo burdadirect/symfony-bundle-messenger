@@ -36,7 +36,7 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
    * @return array
    */
   protected function getHeaderReplacements(Email $email): array {
-    return [];
+    return $this->config['defaults'] ?? [];
   }
 
   /**
@@ -59,7 +59,7 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
 
     // Set From address.
     if ($from = $this->getFrom($message)) {
-      $message->from($from);
+      $message->addFrom($from);
     }
 
     // Gather header replacements.
