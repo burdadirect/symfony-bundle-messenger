@@ -45,6 +45,7 @@ class Configuration implements ConfigurationInterface {
               ->end()
             ->end()
             ->arrayNode('defaults')
+              ->useAttributeAsKey('key')
               ->prototype('array')
                 ->children()
                   ->scalarNode('key')->end()
