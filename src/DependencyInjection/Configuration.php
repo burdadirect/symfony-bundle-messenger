@@ -40,7 +40,7 @@ class Configuration implements ConfigurationInterface {
               ->prototype('array')
                 ->children()
                   ->scalarNode('key')->end()
-                  ->scalarNode('value')->end()
+                  ->variableNode('value')->end()
                 ->end()
               ->end()
             ->end()
