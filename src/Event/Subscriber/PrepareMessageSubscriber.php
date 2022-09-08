@@ -31,6 +31,94 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * @param MessageEvent $messageEvent
+   *
+   * @return void
+   */
+  public function onMessage(MessageEvent $messageEvent) : void {
+    $message = $messageEvent->getMessage();
+    if (!$message instanceof Email) {
+      return;
+    }
+
+    $this->handleFrom($message);
+    $this->handleSubject($message);
+    $this->handleHeaders($message);
+  }
+
+  /****************************************************************************/
+
+  /**
+   * @param Email $email
+   *
+   * @return void
+   */
+  protected function handleFrom(Email $email): void {
+    // Set From address.
+    if ($from = $this->getFrom($email)) {
+      $email->addFrom($from);
+    }
+  }
+
+  /**
+   * @param Email $email
+   *
+   * @return void
+   */
+  protected function handleHeaders(Email $email): void {
+    // Gather header replacements.
+    $headerReplacements = $this->getHeaderReplacements($email);
+
+    // Add headers.
+    $headers = $this->config['headers'] ?: [];
+    foreach ($headers as $header) {
+      $headerValue = str_replace(array_keys($headerReplacements), array_values($headerReplacements), $header['value']);
+
+      switch (strtolower($header['key'])) {
+        case 'return-path':
+          $email->getHeaders()->addPathHeader($header['key'], $headerValue);
+          break;
+
+        case 'from':
+        case 'reply-to':
+        case 'to':
+        case 'cc':
+        case 'bcc':
+          $email->getHeaders()->addMailboxListHeader($header['key'], $headerValue);
+          break;
+
+        case 'message-id':
+        case 'in-reply-to':
+        case 'references':
+          $email->getHeaders()->addIdHeader($header['key'], $headerValue);
+          break;
+
+        case 'sender':
+          $email->getHeaders()->addMailboxHeader($header['key'], $headerValue);
+          break;
+
+        default:
+          $email->getHeaders()->addTextHeader($header['key'], $headerValue);
+      }
+    }
+  }
+
+  /**
+   * @param Email $email
+   *
+   * @return void
+   */
+  protected function handleSubject(Email $email): void {
+    // Add environment-specific subject prefixes/postfixes.
+    $subjectPrefix = $this->config['subject']['prefix'] ?? '';
+    $subjectPostfix = $this->config['subject']['postfix'] ?? '';
+
+    $email->subject($subjectPrefix.$email->getSubject().$subjectPostfix);
+  }
+
+  /****************************************************************************/
+
+  /**
    * @param Email $email
    *
    * @return array
@@ -46,63 +134,6 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
    */
   protected function getFrom(Email $email): ?Address {
     return new Address($this->config['from']['mail'], $this->config['from']['name']);
-  }
-
-  /**
-   * @throws \Exception
-   */
-  public function onMessage(MessageEvent $messageEvent) : void {
-    $message = $messageEvent->getMessage();
-    if (!$message instanceof Email) {
-      return;
-    }
-
-    // Set From address.
-    if ($from = $this->getFrom($message)) {
-      $message->addFrom($from);
-    }
-
-    // Gather header replacements.
-    $headerReplacements = $this->getHeaderReplacements($message);
-
-    // Add headers.
-    $headers = $this->config['headers'] ?: [];
-    foreach ($headers as $header) {
-      $headerValue = str_replace(array_keys($headerReplacements), array_values($headerReplacements), $header['value']);
-
-      switch (strtolower($header['key'])) {
-        case 'return-path':
-          $message->getHeaders()->addPathHeader($header['key'], $headerValue);
-          break;
-
-        case 'from':
-        case 'reply-to':
-        case 'to':
-        case 'cc':
-        case 'bcc':
-          $message->getHeaders()->addMailboxListHeader($header['key'], $headerValue);
-          break;
-
-        case 'message-id':
-        case 'in-reply-to':
-        case 'references':
-          $message->getHeaders()->addIdHeader($header['key'], $headerValue);
-          break;
-
-        case 'sender':
-          $message->getHeaders()->addMailboxHeader($header['key'], $headerValue);
-          break;
-
-        default:
-          $message->getHeaders()->addTextHeader($header['key'], $headerValue);
-      }
-    }
-
-    // Add environment-specific subject prefixes/postfixes.
-    $subjectPrefix = $this->config['subject']['prefix'] ?? '';
-    $subjectPostfix = $this->config['subject']['postfix'] ?? '';
-
-    $message->subject($subjectPrefix.$message->getSubject().$subjectPostfix);
   }
 
 }
