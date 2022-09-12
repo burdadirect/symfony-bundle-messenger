@@ -66,11 +66,13 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
    * @return void
    */
   protected function handleHeaders(Email $email): void {
+    // Gather headers.
+    $headers = $this->getHeaders($email);
+
     // Gather header replacements.
     $headerReplacements = $this->getHeaderReplacements($email);
 
     // Add headers.
-    $headers = $this->config['headers'] ?: [];
     foreach ($headers as $header) {
       $headerValue = str_replace(array_keys($headerReplacements), array_values($headerReplacements), $header['value']);
 
@@ -117,6 +119,15 @@ class PrepareMessageSubscriber implements EventSubscriberInterface {
   }
 
   /****************************************************************************/
+
+  /**
+   * @param Email $email
+   *
+   * @return array
+   */
+  protected function getHeaders(Email $email): array {
+    return $this->config['headers'] ?: [];
+  }
 
   /**
    * @param Email $email
