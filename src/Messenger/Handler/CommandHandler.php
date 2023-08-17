@@ -7,10 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class CommandHandler implements MessageHandlerInterface {
-
+#[\Symfony\Component\Messenger\Attribute\AsMessageHandler]
+class CommandHandler
+{
   private Application $application;
 
   /**
