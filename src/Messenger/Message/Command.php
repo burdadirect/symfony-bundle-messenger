@@ -2,54 +2,45 @@
 
 namespace HBM\MessengerBundle\Messenger\Message;
 
-class Command extends AbstractMessage {
+class Command extends AbstractMessage
+{
+    private string $name;
 
-  private string $name;
+    private array $parameters;
 
-  private array $parameters;
+    /**
+     * Set command name.
+     */
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
-  /**
-   * Set command name.
-   *
-   * @param string $name
-   *
-   * @return self
-   */
-  public function setName(string $name) : self {
-    $this->name = $name;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Get command name.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-  /**
-   * Get command name.
-   *
-   * @return string
-   */
-  public function getName() : string {
-    return $this->name;
-  }
+    /**
+     * Set command parameters.
+     */
+    public function setParameters(array $parameters): self
+    {
+        $this->parameters = $parameters;
 
-  /**
-   * Set command parameters.
-   *
-   * @param array $parameters
-   *
-   * @return self
-   */
-  public function setParameters(array $parameters) : self {
-    $this->parameters = $parameters;
+        return $this;
+    }
 
-    return $this;
-  }
-
-  /**
-   * Get command parameters.
-   *
-   * @return array|null
-   */
-  public function getParameters() : ?array {
-    return $this->parameters;
-  }
-
+    /**
+     * Get command parameters.
+     */
+    public function getParameters(): ?array
+    {
+        return $this->parameters;
+    }
 }

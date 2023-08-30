@@ -8,143 +8,115 @@ use Symfony\Component\Mailer\Event\MessageEvent;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-class PrepareMessageSubscriber implements EventSubscriberInterface {
+class PrepareMessageSubscriber implements EventSubscriberInterface
+{
+    private array $config;
 
-  private array $config;
-
-  /**
-   * PrepareMessageSubscriber constructor.
-   *
-   * @param ParameterBagInterface $parameterBag
-   */
-  public function __construct(ParameterBagInterface $parameterBag) {
-    $this->config = $parameterBag->get('hbm.messenger.mailer');
-  }
-
-  /**
-   * @return string[]
-   */
-  public static function getSubscribedEvents(): array {
-    return [
-      MessageEvent::class => 'onMessage',
-    ];
-  }
-
-  /**
-   * @param MessageEvent $messageEvent
-   *
-   * @return void
-   */
-  public function onMessage(MessageEvent $messageEvent) : void {
-    $message = $messageEvent->getMessage();
-    if (!$message instanceof Email) {
-      return;
+    /**
+     * PrepareMessageSubscriber constructor.
+     */
+    public function __construct(ParameterBagInterface $parameterBag)
+    {
+        $this->config = $parameterBag->get('hbm.messenger.mailer');
     }
 
-    $this->handleFrom($message);
-    $this->handleSubject($message);
-    $this->handleHeaders($message);
-  }
-
-  /****************************************************************************/
-
-  /**
-   * @param Email $email
-   *
-   * @return void
-   */
-  protected function handleFrom(Email $email): void {
-    // Set From address.
-    if ($from = $this->getFrom($email)) {
-      $email->addFrom($from);
+    /**
+     * @return string[]
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [
+          MessageEvent::class => 'onMessage',
+        ];
     }
-  }
 
-  /**
-   * @param Email $email
-   *
-   * @return void
-   */
-  protected function handleHeaders(Email $email): void {
-    // Gather headers.
-    $headers = $this->getHeaders($email);
+    public function onMessage(MessageEvent $messageEvent): void
+    {
+        $message = $messageEvent->getMessage();
 
-    // Gather header replacements.
-    $headerReplacements = $this->getHeaderReplacements($email);
+        if (!$message instanceof Email) {
+            return;
+        }
 
-    // Add headers.
-    foreach ($headers as $header) {
-      $headerValue = str_replace(array_keys($headerReplacements), array_values($headerReplacements), $header['value']);
-
-      switch (strtolower($header['key'])) {
-        case 'return-path':
-          $email->getHeaders()->addPathHeader($header['key'], $headerValue);
-          break;
-
-        case 'from':
-        case 'reply-to':
-        case 'to':
-        case 'cc':
-        case 'bcc':
-          $email->getHeaders()->addMailboxListHeader($header['key'], $headerValue);
-          break;
-
-        case 'message-id':
-        case 'in-reply-to':
-        case 'references':
-          $email->getHeaders()->addIdHeader($header['key'], $headerValue);
-          break;
-
-        case 'sender':
-          $email->getHeaders()->addMailboxHeader($header['key'], $headerValue);
-          break;
-
-        default:
-          $email->getHeaders()->addTextHeader($header['key'], $headerValue);
-      }
+        $this->handleFrom($message);
+        $this->handleSubject($message);
+        $this->handleHeaders($message);
     }
-  }
 
-  /**
-   * @param Email $email
-   *
-   * @return void
-   */
-  protected function handleSubject(Email $email): void {
-    // Add environment-specific subject prefixes/postfixes.
-    $subjectPrefix = $this->config['subject']['prefix'] ?? '';
-    $subjectPostfix = $this->config['subject']['postfix'] ?? '';
+    protected function handleFrom(Email $email): void
+    {
+        // Set From address.
+        if ($from = $this->getFrom($email)) {
+            $email->addFrom($from);
+        }
+    }
 
-    $email->subject($subjectPrefix.$email->getSubject().$subjectPostfix);
-  }
+    protected function handleHeaders(Email $email): void
+    {
+        // Gather headers.
+        $headers = $this->getHeaders($email);
 
-  /****************************************************************************/
+        // Gather header replacements.
+        $headerReplacements = $this->getHeaderReplacements($email);
 
-  /**
-   * @param Email $email
-   *
-   * @return array
-   */
-  protected function getHeaders(Email $email): array {
-    return $this->config['headers'] ?: [];
-  }
+        // Add headers.
+        foreach ($headers as $header) {
+            $headerValue = str_replace(array_keys($headerReplacements), array_values($headerReplacements), $header['value']);
 
-  /**
-   * @param Email $email
-   *
-   * @return array
-   */
-  protected function getHeaderReplacements(Email $email): array {
-    return $this->config['defaults'] ?? [];
-  }
+            switch (strtolower($header['key'])) {
+                case 'return-path':
+                    $email->getHeaders()->addPathHeader($header['key'], $headerValue);
 
-  /**
-   * @param Email $email
-   *
-   * @return Address|null
-   */
-  protected function getFrom(Email $email): ?Address {
-    return new Address($this->config['from']['mail'], $this->config['from']['name']);
-  }
+                    break;
 
+                case 'from':
+                case 'reply-to':
+                case 'to':
+                case 'cc':
+                case 'bcc':
+                    $email->getHeaders()->addMailboxListHeader($header['key'], $headerValue);
+
+                    break;
+
+                case 'message-id':
+                case 'in-reply-to':
+                case 'references':
+                    $email->getHeaders()->addIdHeader($header['key'], $headerValue);
+
+                    break;
+
+                case 'sender':
+                    $email->getHeaders()->addMailboxHeader($header['key'], $headerValue);
+
+                    break;
+
+                default:
+                    $email->getHeaders()->addTextHeader($header['key'], $headerValue);
+            }
+        }
+    }
+
+    protected function handleSubject(Email $email): void
+    {
+        // Add environment-specific subject prefixes/postfixes.
+        $subjectPrefix  = $this->config['subject']['prefix'] ?? '';
+        $subjectPostfix = $this->config['subject']['postfix'] ?? '';
+
+        $email->subject($subjectPrefix . $email->getSubject() . $subjectPostfix);
+    }
+
+    protected function getHeaders(Email $email): array
+    {
+        return $this->config['headers'] ?: [];
+    }
+
+    protected function getHeaderReplacements(Email $email): array
+    {
+        return $this->config['defaults'] ?? [];
+    }
+
+    protected function getFrom(Email $email): ?Address
+    {
+        return new Address($this->config['from']['mail'], $this->config['from']['name']);
+    }
 }
