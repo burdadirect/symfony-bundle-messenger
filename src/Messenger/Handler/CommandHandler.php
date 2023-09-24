@@ -11,33 +11,30 @@ use Symfony\Component\HttpKernel\KernelInterface;
 #[\Symfony\Component\Messenger\Attribute\AsMessageHandler]
 class CommandHandler
 {
-  private Application $application;
+    private Application $application;
 
-  /**
-   * CommandHandler constructor.
-   *
-   * @param KernelInterface $kernel
-   */
-  public function __construct(KernelInterface $kernel) {
-    $this->application = new Application($kernel);
-    $this->application->setAutoExit(false);
-  }
+    /**
+     * CommandHandler constructor.
+     */
+    public function __construct(KernelInterface $kernel)
+    {
+        $this->application = new Application($kernel);
+        $this->application->setAutoExit(false);
+    }
 
-  /**
-   * @param Command $command
-   *
-   * @throws \Exception
-   */
-  public function __invoke(Command $command) {
-    // Find command.
-    $consoleCommand = $this->application->find($command->getName());
+    /**
+     * @throws \Exception
+     */
+    public function __invoke(Command $command)
+    {
+        // Find command.
+        $consoleCommand = $this->application->find($command->getName());
 
-    // Assemble inputs.
-    $inputs = $command->getParameters();
-    $inputs['command'] = $consoleCommand;
+        // Assemble inputs.
+        $inputs            = $command->getParameters();
+        $inputs['command'] = $consoleCommand;
 
-    // Run command.
-    $consoleCommand->run(new ArrayInput($inputs), new NullOutput());
-  }
-
+        // Run command.
+        $consoleCommand->run(new ArrayInput($inputs), new NullOutput());
+    }
 }

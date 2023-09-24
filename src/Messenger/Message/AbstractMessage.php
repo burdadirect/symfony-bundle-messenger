@@ -2,53 +2,45 @@
 
 namespace HBM\MessengerBundle\Messenger\Message;
 
-abstract class AbstractMessage {
+abstract class AbstractMessage
+{
+    protected ?string $description;
 
-  protected ?string $description;
+    protected ?string $email;
 
-  protected ?string $email;
+    /**
+     * Set description.
+     */
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
-  /**
-   * Set description.
-   *
-   * @param string|null $description
-   *
-   * @return self
-   */
-  public function setDescription(?string $description) : self {
-    $this->description = $description;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Get description.
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
 
-  /**
-   * Get description.
-   *
-   * @return string|null
-   */
-  public function getDescription() : ?string {
-    return $this->description;
-  }
+    /**
+     * Set email.
+     */
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
 
-  /**
-   * Set email.
-   *
-   * @param string|null $email
-   *
-   * @return self
-   */
-  public function setEmail(?string $email): self {
-    $this->email = $email;
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get email.
-   *
-   * @return string|null
-   */
-  public function getEmail(): ?string {
-    return $this->email;
-  }
-
+    /**
+     * Get email.
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
 }

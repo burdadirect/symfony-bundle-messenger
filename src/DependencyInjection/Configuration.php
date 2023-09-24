@@ -10,54 +10,54 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
-class Configuration implements ConfigurationInterface {
+class Configuration implements ConfigurationInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfigTreeBuilder(): TreeBuilder
+    {
+        $treeBuilder = new TreeBuilder('hbm_messenger');
+        $rootNode    = $treeBuilder->getRootNode();
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfigTreeBuilder(): TreeBuilder {
-    $treeBuilder = new TreeBuilder('hbm_messenger');
-    $rootNode = $treeBuilder->getRootNode();
-
-    $rootNode
-      ->children()
-        ->arrayNode('mailer')
+        $rootNode
           ->children()
-            ->scalarNode('mails_per_second')->defaultNull()->end()
-            ->arrayNode('from')
+            ->arrayNode('mailer')
               ->children()
-                ->scalarNode('mail')->end()
-                ->scalarNode('name')->defaultValue('')->end()
-              ->end()
-            ->end()
-            ->arrayNode('subject')
-              ->children()
-                ->scalarNode('prefix')->defaultNull()->end()
-                ->scalarNode('postfix')->defaultNull()->end()
-              ->end()
-            ->end()
-            ->arrayNode('headers')
-              ->prototype('array')
-                ->children()
-                  ->scalarNode('key')->end()
-                  ->variableNode('value')->end()
+                ->scalarNode('mails_per_second')->defaultNull()->end()
+                ->arrayNode('from')
+                  ->children()
+                    ->scalarNode('mail')->end()
+                    ->scalarNode('name')->defaultValue('')->end()
+                  ->end()
+                ->end()
+                ->arrayNode('subject')
+                  ->children()
+                    ->scalarNode('prefix')->defaultNull()->end()
+                    ->scalarNode('postfix')->defaultNull()->end()
+                  ->end()
+                ->end()
+                ->arrayNode('headers')
+                  ->prototype('array')
+                    ->children()
+                      ->scalarNode('key')->end()
+                      ->variableNode('value')->end()
+                    ->end()
+                  ->end()
+                ->end()
+                ->arrayNode('defaults')
+                  ->useAttributeAsKey('key')
+                  ->prototype('array')
+                    ->children()
+                      ->scalarNode('key')->end()
+                      ->scalarNode('value')->end()
+                    ->end()
+                  ->end()
                 ->end()
               ->end()
             ->end()
-            ->arrayNode('defaults')
-              ->useAttributeAsKey('key')
-              ->prototype('array')
-                ->children()
-                  ->scalarNode('key')->end()
-                  ->scalarNode('value')->end()
-                ->end()
-              ->end()
-            ->end()
-          ->end()
-        ->end()
-      ->end();
+          ->end();
 
-    return $treeBuilder;
-  }
-
+        return $treeBuilder;
+    }
 }
