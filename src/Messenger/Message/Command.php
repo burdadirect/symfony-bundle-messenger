@@ -6,7 +6,7 @@ class Command extends AbstractMessage
 {
     private string $name;
 
-    private array $parameters;
+    private array $parameters = [];
 
     /**
      * Set command name.
