@@ -4,9 +4,9 @@ namespace HBM\MessengerBundle\Messenger\Message;
 
 abstract class AbstractMessage
 {
-    protected ?string $description;
+    protected ?string $description = null;
 
-    protected ?string $email;
+    protected ?string $email = null;
 
     /**
      * Set description.
