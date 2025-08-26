@@ -63,3 +63,14 @@ framework:
                     - HBM\MessengerBundle\Messenger\Middleware\RestoreEntitiesMiddleware
 
 ```
+
+### Subscriber configuration
+
+In your *service.yaml* mark the _PrepareMessageSubscriber_ as an event subscriber
+to enable (for example) prefixing you email subject.
+
+```yaml
+    HBM\MessengerBundle\Event\Subscriber\PrepareMessageSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+```
