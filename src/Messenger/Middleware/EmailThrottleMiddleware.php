@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Stamp\ReceivedStamp;
 class EmailThrottleMiddleware implements MiddlewareInterface
 {
     /** @var int */
-    private $sleep = 0;
+    private int $sleep = 0;
 
     /**
      * EmailThrottleMiddleware constructor.
@@ -23,7 +23,7 @@ class EmailThrottleMiddleware implements MiddlewareInterface
 
         if ($mailsPerSecond) {
             //  A micro second is one millionth of a second.
-            $this->sleep = 1 / $mailsPerSecond * 1000000;
+            $this->sleep = (int) (1 / $mailsPerSecond * 1000000);
         }
     }
 
