@@ -8,9 +8,6 @@ class Command extends AbstractMessage
 
     private array $parameters = [];
 
-    /**
-     * Set command name.
-     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -18,17 +15,11 @@ class Command extends AbstractMessage
         return $this;
     }
 
-    /**
-     * Get command name.
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set command parameters.
-     */
     public function setParameters(array $parameters): self
     {
         $this->parameters = $parameters;
@@ -36,11 +27,18 @@ class Command extends AbstractMessage
         return $this;
     }
 
-    /**
-     * Get command parameters.
-     */
     public function getParameters(): ?array
     {
         return $this->parameters;
+    }
+
+    public function setParameter(string $key, mixed $value): self {
+        $this->parameters[$key] = $value;
+
+        return $this;
+    }
+
+    public function getParameter(string $key, mixed $default = null): mixed {
+        return $this->parameters[$key] ?? $default;
     }
 }
